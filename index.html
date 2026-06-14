@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ca Store | الحل المتكامل لجرافيكس فايف إم</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #020617;       
+            --primary-blue: #2563eb;   
+            --primary-hover: #1d4ed8;  
+            --accent-light: #60a5fa;   
+            --text-main: #f8fafc;     
+            --text-muted: #94a3b8;     
+            
+            /* تدرجات لونية متقدمة */
+            --gradient-main: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+            --gradient-text: linear-gradient(to right, #60a5fa, #3b82f6);
+            
+            /* الزجاج */
+            --glass-bg: rgba(15, 23, 42, 0.6);
+            --glass-border: rgba(59, 130, 246, 0.2);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+    
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* === الخلفية المخصصة + الطبقة السوداء === */
+        body {
+            background-image: url('assets/Ca_Store.png'); /* تأكد من مسار الصورة */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(2, 6, 23, 0.8) 0%, rgba(2, 6, 23, 0.95) 100%);
+            z-index: -2;
+            backdrop-filter: blur(4px);
+        }
+
+        /* تأثير حبيبات الضباب الخفيفة للعمق */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        /* === الأنيميشن === */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulseBlue {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+
+        .animate-up { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+
+        /* === الهيدر (Navbar) === */
+        header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--primary-blue);
+            text-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
+        }
+
+        nav ul { display: flex; gap: 40px; }
+
+        nav a {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-muted);
+            position: relative;
+        }
+
+        nav a:hover, nav a.active {
+            color: white;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0; height: 2px;
+            bottom: -5px; right: 0;
+            background: var(--primary-blue);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after { width: 100%; }
+
+        .btn-small {
+            padding: 8px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--primary-blue);
+            color: var(--accent-light);
+            font-size: 0.9rem;
+            font-weight: 700;
+            transition: 0.3s;
+            background: transparent;
+        }
+
+        .btn-small:hover {
+            background: var(--primary-blue);
+            color: white;
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+        }
+
+        /* === القسم الرئيسي (Hero) === */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 140px 20px 80px;
+            position: relative;
+        }
+
+        .hero-tag {
+            background: rgba(37, 99, 235, 0.15);
+            color: var(--accent-light);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            margin-bottom: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero-tag span {
+            width: 8px; height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 25px;
+            font-weight: 900;
+            background: linear-gradient(to bottom, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin: 0 auto 40px;
+        }
+
+        /* === زر التحميل الاحترافي === */
+        .download-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 18px 45px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #ffffff;
+            background: var(--gradient-main);
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            box-shadow: 0 10px 40px -10px rgba(37, 99, 235, 0.6);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            min-width: 250px;
+            animation: pulseBlue 2.5s infinite;
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.6s;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 50px -10px rgba(37, 99, 235, 0.8);
+            border-color: var(--accent-light);
+        }
+
+        .download-btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .btn-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255,255,255,0.05);
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .icon-svg {
+            width: 24px; height: 24px;
+            fill: currentColor;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* === المميزات (Cards) === */
+        .features {
+            padding: 80px 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            padding: 35px;
+            border-radius: 20px;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-blue);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        .card-icon-wrapper {
+            width: 60px; height: 60px;
+            background: rgba(37, 99, 235, 0.1);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            color: var(--primary-blue);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            transition: 0.3s;
+        }
+
+        .card:hover .card-icon-wrapper {
+            background: var(--primary-blue);
+            color: white;
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .card-icon-wrapper svg {
+            width: 30px; height: 30px;
+            fill: currentColor;
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* === الخطوات === */
+        .how-to-section {
+            padding: 100px 5%;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-header h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: white;
+        }
+        
+        .section-header h2 span {
+            color: var(--primary-blue);
+            text-decoration: underline;
+            text-decoration-color: rgba(37,99,235,0.3);
+            text-underline-offset: 10px;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .step-item {
+            background: linear-gradient(180deg, rgba(30,41,59,0.7) 0%, rgba(15,23,42,0.9) 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .step-item:hover {
+            border-color: var(--accent-light);
+            transform: translateY(-5px);
+        }
+
+        .step-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--glass-border);
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+
+        .step-item:hover .step-img { opacity: 1; }
+
+        .step-content {
+            padding: 25px;
+            position: relative;
+        }
+
+        .step-badge {
+            position: absolute;
+            top: -20px;
+            left: 25px;
+            background: var(--gradient-main);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.1rem;
+            border: 4px solid var(--bg-dark);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .step-content h3 { margin-bottom: 10px; font-size: 1.2rem; margin-left: 20px; }
+        .step-content p { font-size: 0.95rem; color: var(--text-muted); margin-left: 20px; }
+
+        /* === الفوتر === */
+        footer {
+            background: #020617;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 60px 5% 30px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .socials {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            transition: 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--primary-blue);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .copyright {
+            margin-top: 40px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* === Responsive === */
+        @media (max-width: 768px) {
+            header { padding: 15px; width: 95%; top: 10px; }
+            nav { display: none; } /* يمكن إضافة قائمة همبرغر لاحقاً */
+            .hero h1 { font-size: 2.5rem; }
+            .download-btn { width: 100%; }
+            .btn-meta { flex-direction: column; gap: 5px; align-items: center; }
+        }.download-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.download-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.15),
+        transparent
+    );
+    transform: translateX(-100%);
+    transition: .8s;
+}
+
+.download-btn:hover::after {
+    transform: translateX(100%);
+}
+
+.download-btn:active {
+    transform: scale(.98);
+}
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <!-- أيقونة بسيطة للشعار -->
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" style="color:var(--primary-blue)">
+                <path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z"/>
+            </svg>
+            Ca <span>Store</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#hero" class="active">الرئيسية</a></li>
+                <li><a href="#features">المميزات</a></li>
+                <li><a href="#how-to">طريقة الاستخدام</a></li>
+            </ul>
+        </nav>
+        <button class="btn-small" onclick="document.getElementById('hero').scrollIntoView();">تحميل</button>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <div class="hero-content">
+                <div class="hero-tag animate-up">
+                    <span></span> الإصدار 1.0 متاح الآن
+                </div>
+                <h1 class="animate-up delay-1">ارتقِ بجرافيكس سيرفرك <br>إلى مستوى احترافي</h1>
+                <p class="animate-up delay-2">
+                    برنامج Ca Store هو الحل الأمثل لمالكي سيرفرات FiveM. قم بتثبيت وتحسين ملفات الجرافيكس بضغطة زر واحدة، مع ضمان الأمان والاستقرار التام.
+                </p>
+                
+<div class="download-container animate-up delay-3">
+
+<a href="https://github.com/Ca1-Store/ca-graphics-app/releases/download/v1.1.9/Ca-App-Setup-1.1.9.exe" class="download-btn" download>
+    <svg class="icon-svg" viewBox="0 0 24 24">
+        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+    </svg>
+
+    <div style="display:flex;flex-direction:column;align-items:flex-start;text-align:right;">
+        <span style="font-size:1.2rem;font-weight:900;">تحميل البرنامج</span>
+        <span style="font-size:0.8rem;opacity:.8;font-weight:600;">
+            Windows 10 / 11
+        </span>
+    </div>
+</a>
+
+<div class="btn-meta">
+    <span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+        </svg>
+        الإصدار 1.1.9
+    </span>
+
+    <span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>
+        </svg>
+        194 MB
+    </span>
+
+    <span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+        </svg>
+        آمن ومحمي
+    </span>
+</div>
+
+</div>
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <!-- Card 1 -->
+            <div class="card">
+                <div class="card-icon-wrapper">
+                    <!-- Speed Icon -->
+                    <svg viewBox="0 0 24 24"><path d="M20.38 8.57l-1.23 1.85a8 8 0 0 1-.22 7.58H5.07A8 8 0 0 1 15.58 6.85l1.85-1.23A10 10 0 0 0 3.35 19a2 2 0 0 0 1.72 1h13.85a2 2 0 0 0 1.74-1 10 10 0 0 0-.27-10.44zm-9.79 6.84a2 2 0 0 0 2.83 0l5.66-8.49-8.49 5.66a2 2 0 0 0 0 2.83z"/></svg>
+                </div>
+                <h3>سرعة وفعالية</h3>
+                <p>يتم تثبيت الملفات وتحديث الإعدادات في أقل من دقيقة واحدة بفضل خوارزميات الضغط المتطورة.</p>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card">
+                <div class="card-icon-wrapper">
+                    <!-- Shield Icon -->
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                </div>
+                <h3>حماية وأمان</h3>
+                <p>جميع ملفات التثبيت مفحوصة وموقعة رقمياً لضمان خلوها من الفيروسات وعدم تأثيرها على استقرار السيرفر.</p>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card">
+                <div class="card-icon-wrapper">
+                    <!-- Palette Icon -->
+                    <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                </div>
+                <h3>جودة بصرية عالية</h3>
+                <p>تحسينات متقدمة للإضاءة (Lighting)، الظلال (Shadows)، والألوان لتجربة لعب سينمائية مذهلة.</p>
+            </div>
+        </section>
+
+        <!-- How To Use -->
+        <section class="how-to-section" id="how-to">
+            <div class="section-header">
+                <h2>طريقة <span>الاستخدام</span></h2>
+                <p style="color:var(--text-muted)">ثلاث خطوات بسيطة لنقل عالمك إلى مستوى اخر</p>
+            </div>
+
+            <div class="steps-grid">
+                <!-- Step 1 -->
+                <div class="step-item">
+                    <img src="assets/app1.png" alt="تحميل" class="step-img">
+                    <div class="step-content">
+                        <div class="step-badge">1</div>
+                        <h3> تسجيل الدخول</h3>
+                        <p>يجب عليك تسجيل الدخول عبر الديسكورد . ملاحظة يجب ان يكون لديك رول نسخة جرافيكس بسيرفر المتجر  </p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-item">
+                    <img src="assets/app2.png" alt="تثبيت" class="step-img">
+                    <div class="step-content">
+                        <div class="step-badge">2</div>
+                        <h3> تحميل الجرافيكس</h3>
+                        <p>توجه الى صفحة نسخ الجرافيكس وستجد الجرافيكسات المتاحه لديك وما عليك الا ضغط زر التحميل .</p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-item">
+                    <img src="assets/app5.png" alt="تشغيل" class="step-img">
+                    <div class="step-content">
+                        <div class="step-badge">3</div>
+                        <h3>الانطلاق</h3>
+                        <p>انتظر انتهاء التثبيت، ثم شغل السيرفر واستمتع.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="logo" style="font-size: 1.5rem;">Store <span>Ca</span></div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 Ca Store. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
