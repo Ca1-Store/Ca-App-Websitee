@@ -1,0 +1,358 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Ca App</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;700&family=Reem+Kufi:wght@500;600;700&display=swap">
+<style>
+/* Layout: sticky nav, hero with a switchable app preview, bento feature grid, three deep-dive rows, sequence steps, security band, FAQ, closing CTA. Black and silver; the silver button is the only bright object on screen. */
+:root {
+  --bg: #060709; --bg-2: #0b0d11; --surface: #10131a; --surface-2: #171b23; --line: #1f242d; --line-2: #2e3541;
+  --fg: #f3f5f8; --muted: #9aa3b0; --dim: #636c79;
+  --silver-1: #f6f8fb; --silver-2: #a4acb9; --on-silver: #07080a; --glow: rgba(185,196,214,.17); --shadow: rgba(0,0,0,.55);
+  --ok: #3ddc97; --warn: #f5b84a; --err: #ff6b78;
+  --display: "Reem Kufi", "IBM Plex Sans Arabic", "Segoe UI", sans-serif; --font: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif; --mono: "IBM Plex Mono", Consolas, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  --bg: #eff1f4; --bg-2: #e5e8ed; --surface: #ffffff; --surface-2: #f3f5f8; --line: #d8dce3; --line-2: #c4cad4;
+  --fg: #0d0f12; --muted: #536071; --dim: #7c8695; --silver-1: #1d2127; --silver-2: #49525f; --on-silver: #f6f8fb; --glow: rgba(60,72,95,.13); --shadow: rgba(30,40,60,.22);
+  --ok: #138a57; --warn: #a86a00; --err: #c0303f; color-scheme: light; } }
+:root[data-theme="light"] {
+  --bg: #eff1f4; --bg-2: #e5e8ed; --surface: #ffffff; --surface-2: #f3f5f8; --line: #d8dce3; --line-2: #c4cad4;
+  --fg: #0d0f12; --muted: #536071; --dim: #7c8695; --silver-1: #1d2127; --silver-2: #49525f; --on-silver: #f6f8fb; --glow: rgba(60,72,95,.13); --shadow: rgba(30,40,60,.22);
+  --ok: #138a57; --warn: #a86a00; --err: #c0303f; color-scheme: light; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); line-height: 1.75; overflow-x: hidden; margin: 0; }
+a { color: inherit; }
+.wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); }
+section { padding-block: 92px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; font-weight: 600; text-wrap: balance; line-height: 1.2; }
+h2 { font-size: clamp(30px, 5vw, 48px); }
+.kicker { font-size: 12.5px; letter-spacing: .14em; color: var(--silver-2); font-weight: 500; margin-bottom: 14px; display: block; text-transform: uppercase; }
+.sub { color: var(--muted); font-size: 17.5px; max-width: 54ch; margin: 16px 0 0; font-weight: 300; }
+.sil { background: linear-gradient(180deg, var(--silver-1) 25%, var(--silver-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* nav */
+header.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); background: color-mix(in srgb, var(--bg) 78%, transparent); border-bottom: 1px solid transparent; transition: border-color .2s; }
+header.nav.s { border-bottom-color: var(--line); }
+.nav .wrap { display: flex; align-items: center; gap: 22px; height: 68px; }
+.brand { display: flex; align-items: center; gap: 12px; font-family: var(--display); font-weight: 700; letter-spacing: .1em; text-decoration: none; }
+.mark { width: 38px; height: 38px; border-radius: 11px; background: linear-gradient(145deg, var(--silver-1), var(--silver-2)); color: var(--on-silver); display: grid; place-items: center; font-size: 15px; letter-spacing: 0; box-shadow: 0 6px 24px var(--glow); }
+.links { display: flex; gap: 26px; margin-inline-start: 24px; font-size: 14.5px; color: var(--muted); }
+.links a { text-decoration: none; transition: color .15s; } .links a:hover { color: var(--fg); }
+.nav .btn-s { margin-inline-start: auto; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 17px 32px; border-radius: 15px; background: linear-gradient(145deg, var(--silver-1), var(--silver-2)); color: var(--on-silver); font-weight: 700; font-size: 18px; text-decoration: none; box-shadow: 0 10px 40px var(--glow), inset 0 1px 0 rgba(255,255,255,.55); transition: transform .18s, box-shadow .18s; font-family: var(--font); border: 0; cursor: pointer; }
+.btn:hover { transform: translateY(-3px); box-shadow: 0 18px 56px var(--glow), inset 0 1px 0 rgba(255,255,255,.55); }
+.btn svg { width: 22px; height: 22px; flex: none; }
+.btn-s { padding: 10px 20px; font-size: 14.5px; border-radius: 11px; gap: 8px; } .btn-s svg { width: 17px; height: 17px; }
+.btn-g { background: transparent; color: var(--fg); border: 1px solid var(--line-2); box-shadow: none; font-weight: 500; } .btn-g:hover { background: var(--surface); box-shadow: none; }
+:focus-visible { outline: 3px solid var(--fg); outline-offset: 3px; }
+
+/* hero */
+.hero { padding-block: 70px 40px; position: relative; text-align: center; }
+.hero::before { content: ""; position: absolute; inset: -80px 0 auto; height: 620px; background: radial-gradient(ellipse 60% 70% at 50% 0%, var(--glow), transparent 72%), repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 64px); -webkit-mask-image: linear-gradient(#000 20%, transparent); mask-image: linear-gradient(#000 20%, transparent); opacity: .7; pointer-events: none; }
+.hero > * { position: relative; }
+.eyebrow { display: inline-flex; align-items: center; gap: 9px; font-size: 13px; color: var(--muted); border: 1px solid var(--line-2); background: var(--surface); border-radius: 99px; padding: 6px 16px; }
+.eyebrow i { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 12px var(--ok); }
+.hero h1 { font-size: clamp(40px, 9vw, 86px); margin: 26px auto 0; max-width: 15ch; font-weight: 700; line-height: 1.1; }
+.hero .sub { margin-inline: auto; }
+.cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 34px; }
+.file { margin-top: 18px; font-family: var(--mono); font-size: 12.5px; color: var(--dim); direction: ltr; display: flex; gap: 8px 18px; flex-wrap: wrap; justify-content: center; }
+
+/* app window */
+.stage { margin-top: 64px; }
+.tabs { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--line-2); background: var(--surface); border-radius: 13px; margin-bottom: 18px; flex-wrap: wrap; justify-content: center; }
+.tabs button { border: 0; background: none; color: var(--muted); font: 500 14px var(--font); padding: 9px 18px; border-radius: 9px; cursor: pointer; transition: .15s; }
+.tabs button[aria-selected="true"] { background: var(--surface-2); color: var(--fg); box-shadow: inset 0 0 0 1px var(--line-2); }
+.win { border: 1px solid var(--line-2); border-radius: 20px; background: var(--bg-2); box-shadow: 0 40px 100px var(--shadow), 0 0 0 8px color-mix(in srgb, var(--surface) 60%, transparent); overflow: hidden; text-align: start; }
+.wbar { display: flex; align-items: center; gap: 8px; padding: 11px 16px; border-bottom: 1px solid var(--line); background: var(--surface); font: 11px var(--mono); color: var(--dim); letter-spacing: .12em; direction: ltr; }
+.wbar b { width: 10px; height: 10px; border-radius: 50%; background: var(--line-2); } .wbar span { margin-inline-start: auto; }
+.wbody { display: grid; grid-template-columns: 1fr 210px; min-height: 380px; }
+.side { border-inline-start: 1px solid var(--line); padding: 18px 12px; display: flex; flex-direction: column; gap: 4px; background: var(--surface); font-size: 13.5px; }
+.side small { color: var(--dim); font-size: 11px; padding: 10px 12px 4px; letter-spacing: .08em; }
+.side div:not(small) { padding: 9px 12px; border-radius: 10px; color: var(--muted); }
+.side .on { background: var(--surface-2); color: var(--fg) !important; box-shadow: inset 0 0 0 1px var(--line-2); }
+.screen { padding: 22px; display: none; flex-direction: column; gap: 16px; min-width: 0; }
+.screen.on { display: flex; animation: fade .35s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.feat { border-radius: 16px; border: 1px solid var(--line-2); background: linear-gradient(120deg, var(--surface-2), var(--bg-2)); padding: 18px 22px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.feat small { color: var(--muted); font-size: 12px; } .feat strong { display: block; font: 600 20px var(--display); }
+.chip { background: linear-gradient(145deg, var(--silver-1), var(--silver-2)); color: var(--on-silver); border-radius: 9px; padding: 7px 16px; font-size: 12.5px; font-weight: 700; white-space: nowrap; }
+.chip.o { background: none; color: var(--muted); border: 1px solid var(--line-2); font-weight: 500; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.card-m { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); overflow: hidden; min-width: 0; }
+.card-m i { display: block; height: 82px; background: linear-gradient(135deg, var(--surface-2), var(--line)); position: relative; }
+.card-m i::after { content: ""; position: absolute; inset: auto 10px 10px auto; width: 34px; height: 5px; border-radius: 3px; background: var(--line-2); }
+.card-m div { padding: 10px 12px; font-size: 13px; display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+.card-m span { color: var(--dim); font-size: 11px; white-space: nowrap; }
+.tag { font-size: 10.5px; padding: 2px 8px; border-radius: 6px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--line-2); }
+.tag.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+.row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font-size: 13.5px; }
+.row b { font-family: var(--mono); font-weight: 500; direction: ltr; } .row .grow { flex: 1; color: var(--muted); }
+.bar-p { height: 6px; border-radius: 4px; background: var(--line); overflow: hidden; } .bar-p i { display: block; height: 100%; width: 68%; background: linear-gradient(90deg, var(--silver-2), var(--silver-1)); }
+
+/* stats strip: facts only */
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); border: 1px solid var(--line); border-radius: 20px; background: var(--surface); overflow: hidden; margin-top: 70px; }
+.fact { padding: 26px 28px; border-inline-start: 1px solid var(--line); } .fact:first-child { border-inline-start: 0; }
+.fact b { display: block; font: 600 34px var(--display); } .fact span { color: var(--muted); font-size: 14px; }
+
+/* bento */
+.bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-top: 50px; }
+.bx { grid-column: span 2; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(180deg, var(--surface), var(--bg-2)); padding: 28px; display: flex; flex-direction: column; gap: 12px; min-width: 0; transition: border-color .2s, transform .2s; }
+.bx:hover { border-color: var(--line-2); transform: translateY(-3px); }
+.bx.w { grid-column: span 3; } .bx.f { grid-column: span 6; flex-direction: row; align-items: center; gap: 30px; }
+.bx svg.i { width: 30px; height: 30px; color: var(--silver-2); }
+.bx h3 { font-size: 22px; } .bx p { margin: 0; color: var(--muted); font-size: 15px; }
+
+/* deep dives */
+.dive { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.dive.rev .txt { order: 2; }
+.dive ul { list-style: none; padding: 0; margin: 24px 0 0; display: flex; flex-direction: column; gap: 14px; }
+.dive li { display: flex; gap: 12px; color: var(--muted); font-size: 15.5px; }
+.dive li svg { width: 20px; height: 20px; flex: none; color: var(--ok); margin-top: 5px; }
+.panel { border: 1px solid var(--line-2); border-radius: 22px; background: linear-gradient(180deg, var(--surface), var(--bg-2)); padding: 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 30px 80px var(--shadow); min-width: 0; }
+.wave { width: 100%; height: 130px; display: block; }
+.mono { font-family: var(--mono); direction: ltr; text-align: left; font-size: 12.5px; color: var(--muted); word-break: break-all; }
+
+/* steps (a real sequence) */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 54px; position: relative; }
+.step { padding: 0 28px 0 0; position: relative; }
+.step .n { width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line-2); background: var(--surface); display: grid; place-items: center; font: 500 16px var(--mono); color: var(--silver-2); margin-bottom: 20px; position: relative; z-index: 1; }
+.step::before { content: ""; position: absolute; top: 23px; inset-inline: 46px 0; height: 1px; background: linear-gradient(90deg, var(--line-2), transparent); }
+.step:last-child::before { display: none; }
+.step h3 { font-size: 21px; margin-bottom: 8px; } .step p { margin: 0; color: var(--muted); font-size: 15px; }
+
+/* security */
+.sec { border: 1px solid var(--line-2); border-radius: 28px; background: radial-gradient(ellipse 80% 120% at 100% 0%, var(--glow), transparent 60%), var(--surface); padding: clamp(28px, 5vw, 60px); display: grid; grid-template-columns: 1fr 1fr; gap: 44px; }
+.sec ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.sec li { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: color-mix(in srgb, var(--bg) 55%, transparent); }
+.sec li svg { width: 22px; height: 22px; color: var(--silver-2); flex: none; margin-top: 3px; }
+.sec li b { display: block; font-size: 15.5px; } .sec li span { color: var(--muted); font-size: 14px; }
+
+/* faq */
+.faq { max-width: 780px; margin: 44px auto 0; display: flex; flex-direction: column; gap: 10px; }
+details { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); transition: border-color .2s; }
+details[open] { border-color: var(--line-2); }
+summary { list-style: none; cursor: pointer; padding: 20px 24px; font-weight: 500; font-size: 17px; display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font: 300 26px var(--mono); color: var(--silver-2); transition: transform .2s; }
+details[open] summary::after { transform: rotate(45deg); }
+details p { margin: 0; padding: 0 24px 22px; color: var(--muted); font-size: 15.5px; }
+
+/* final */
+.final { text-align: center; border: 1px solid var(--line-2); border-radius: 32px; padding: clamp(44px, 8vw, 96px) 24px; background: radial-gradient(ellipse 70% 90% at 50% 0%, var(--glow), transparent 70%), var(--surface); }
+.final h2 { font-size: clamp(32px, 6vw, 58px); max-width: 16ch; margin: 0 auto; }
+footer { padding-block: 44px 60px; color: var(--dim); font-size: 13.5px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 28px; }
+
+@media (max-width: 900px) {
+  .links { display: none; } section { padding-block: 64px; }
+  .wbody { grid-template-columns: 1fr; } .side { display: none; }
+  .bento { grid-template-columns: 1fr; } .bx, .bx.w, .bx.f { grid-column: auto; } .bx.f { flex-direction: column; align-items: flex-start; }
+  .dive, .sec { grid-template-columns: 1fr; gap: 30px; } .dive.rev .txt { order: 0; }
+  .steps { grid-template-columns: 1fr; gap: 34px; } .step::before { display: none; } .step { padding: 0; }
+  .fact { border-inline-start: 0; border-top: 1px solid var(--line); } .fact:first-child { border-top: 0; }
+}
+@media (max-width: 560px) { .grid3 { grid-template-columns: repeat(2, 1fr); } .grid3 .card-m:nth-child(3) { display: none; } .screen { padding: 14px; } .feat { flex-direction: column; align-items: flex-start; } .nav .wrap { gap: 10px; } .btn { padding: 16px 24px; font-size: 16.5px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+  <symbol id="i-ck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/></symbol>
+  <symbol id="i-wave" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/><path d="M2 18c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/><path d="M2 6c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></symbol>
+  <symbol id="i-gauge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-5"/><circle cx="12" cy="14" r="1.2"/><path d="M4 18a9 9 0 1 1 16 0"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-15-6.7L3 13"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15-6.7L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15 6.7L21 16"/><path d="M16 16h5v5"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M16 7l3 3"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+</svg>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="mark">CA</span><span>CA STORE</span></a>
+    <nav class="links" aria-label="الأقسام"><a href="#features">المميزات</a><a href="#sounds">الساوندات</a><a href="#start">البدء</a><a href="#security">الأمان</a><a href="#faq">الأسئلة</a></nav>
+    <a class="btn btn-s" href="https://github.com/Ca1-Store/ca-graphics-app/releases/download/v2.0.0/Ca-App-Setup-2.0.0.exe" rel="noopener"><svg><use href="#i-dl"/></svg>تحميل</a>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <span class="eyebrow"><i></i> الإصدار 2.0.0 متاح الآن</span>
+    <h1 class="sil">تجربة FiveM بمستوى آخر</h1>
+    <p class="sub">برنامج واحد لتثبيت باكات الجرافيكس والمودات والفلاتر وساوندات الأسلحة. سريع، مرتب، ويتحدث تلقائياً.</p>
+    <div class="cta">
+      <a class="btn" href="https://github.com/Ca1-Store/ca-graphics-app/releases/download/v2.0.0/Ca-App-Setup-2.0.0.exe" rel="noopener"><svg><use href="#i-dl"/></svg>تحميل للويندوز</a>
+      <a class="btn btn-g" href="#features">اكتشف المميزات</a>
+    </div>
+    <div class="file"><span>Ca-App-Setup-2.0.0.exe</span><span>Windows 10 / 11 · 64-bit</span></div>
+
+    <div class="stage">
+      <div class="tabs" role="tablist" aria-label="معاينة البرنامج">
+        <button role="tab" aria-selected="true" data-s="s1">مكتبة المودات</button>
+        <button role="tab" aria-selected="false" data-s="s2">ساوندات الأسلحة</button>
+        <button role="tab" aria-selected="false" data-s="s3">التشخيص</button>
+      </div>
+      <div class="win">
+        <div class="wbar"><b></b><b></b><b></b><span>CA STORE · GRAPHICS MANAGER</span></div>
+        <div class="wbody">
+          <div style="min-width:0">
+            <div class="screen on" id="s1">
+              <div class="feat"><div><small>مود الأسبوع</small><strong>European Roads</strong></div><span class="chip">تثبيت</span></div>
+              <div class="grid3">
+                <div class="card-m"><i></i><div>أشجار واقعية <span class="tag ok">مثبّت</span></div></div>
+                <div class="card-m"><i></i><div>شوارع ألمانية <span class="tag">جديد</span></div></div>
+                <div class="card-m"><i></i><div>إضاءة الليل <span class="tag">CA-4</span></div></div>
+              </div>
+            </div>
+            <div class="screen" id="s2">
+              <div class="row"><svg width="22" height="22" style="color:var(--ok)"><use href="#i-ck"/></svg><div class="grow">تم العثور على GTA V تلقائياً</div><b>x64\audio\sfx</b></div>
+              <div class="row"><span class="grow">WEAPONS_PLAYER.rpf</span><span class="tag">مستبدَل</span><span class="chip o">استرجاع الأصل</span></div>
+              <div class="row"><span class="grow">WEAPONS_NPC.rpf</span><span class="tag">أصلي</span><span class="chip">تركيب ساوند</span></div>
+            </div>
+            <div class="screen" id="s3">
+              <div class="row"><svg width="22" height="22" style="color:var(--ok)"><use href="#i-ck"/></svg><span class="grow">مسار FiveM</span><b>جاهز</b></div>
+              <div class="row"><svg width="22" height="22" style="color:var(--ok)"><use href="#i-ck"/></svg><span class="grow">المساحة الحرة</span><b>186 GB</b></div>
+              <div class="row"><svg width="22" height="22" style="color:var(--ok)"><use href="#i-ck"/></svg><span class="grow">الاتصال بالخادم</span><b>42 ms</b></div>
+              <div class="bar-p"><i></i></div>
+            </div>
+          </div>
+          <div class="side"><small>الرئيسية</small><div class="on">مكتبة المودات</div><div>باكات الجرافيكس</div><div>ساوندات الأسلحة</div><div>التخصيص والفلاتر</div><small>حسابي</small><div>التحميلات</div><div>التشخيص</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="facts">
+      <div class="fact"><b>5</b><span>مستويات اشتراك CA-1 إلى CA-5</span></div>
+      <div class="fact"><b>SHA-256</b><span>تحقق من كل ملف قبل تثبيته</span></div>
+      <div class="fact"><b>1 ضغطة</b><span>لتثبيت أي مود أو ساوند</span></div>
+      <div class="fact"><b>تلقائي</b><span>تحديث البرنامج وتنبيه بالجديد</span></div>
+    </div>
+  </div>
+
+  <section id="features"><div class="wrap">
+    <span class="kicker">المميزات</span>
+    <h2>كل ما تحتاجه، في مكان واحد</h2>
+    <p class="sub">صُمّم ليكون سريعاً وواضحاً، من أول تثبيت إلى آخر تحديث.</p>
+    <div class="bento">
+      <div class="bx w"><svg class="i"><use href="#i-grid"/></svg><h3>باكات الجرافيكس</h3><p>ثبّت أحدث إصدارات CA حسب اشتراكك. يأخذ البرنامج نسخة احتياطية من جرافيكسك الحالية قبل أي استبدال، وتستطيع الرجوع لها.</p></div>
+      <div class="bx w"><svg class="i"><use href="#i-box"/></svg><h3>مكتبة المودات</h3><p>أقسام مرتبة (أشجار، شوارع وغيرها)، مود الأسبوع، مفضلة تتزامن مع حسابك، وتنبيه عند وجود تحديث لمود مثبّت.</p></div>
+      <div class="bx"><svg class="i"><use href="#i-wave"/></svg><h3>ساوندات الأسلحة</h3><p>ركّب ساوندك أو حمّل من المكتبة.</p></div>
+      <div class="bx"><svg class="i"><use href="#i-sliders"/></svg><h3>فلاتر وتخصيصات</h3><p>فلاتر ReShade وملفات التخصيص بمكانها الصحيح تلقائياً.</p></div>
+      <div class="bx"><svg class="i"><use href="#i-gauge"/></svg><h3>تحسين الأداء</h3><p>أدوات لتنظيف الملفات المؤقتة ورفع أداء الجهاز.</p></div>
+      <div class="bx f"><svg class="i" style="width:44px;height:44px"><use href="#i-cpu"/></svg><div><h3>تشخيص ذكي لجهازك</h3><p>افحص مسار FiveM والمساحة الحرة والاتصال بالخادم بضغطة، وصدّر تقريراً جاهزاً عند الحاجة لمساعدة.</p></div></div>
+    </div>
+  </div></section>
+
+  <section id="sounds" style="background:var(--bg-2);border-block:1px solid var(--line)"><div class="wrap dive">
+    <div class="txt">
+      <span class="kicker">ساوندات الأسلحة</span>
+      <h2>غيّر صوت سلاحك في ثوانٍ</h2>
+      <p class="sub">يجد البرنامج لعبة GTA V بنفسه ويستبدل ملف الصوت داخل مجلد اللعبة، بدون أن تبحث عن مسارات.</p>
+      <ul>
+        <li><svg><use href="#i-ck"/></svg>تحديد مسار GTA V تلقائياً من Rockstar وSteam وEpic، أو يدوياً إن أردت.</li>
+        <li><svg><use href="#i-ck"/></svg>ركّب أي ساوند تملكه (‎.rpf أو .zip) أو حمّل من مكتبة البرنامج.</li>
+        <li><svg><use href="#i-ck"/></svg>نسخة احتياطية من الأصل، واسترجاع ملف أو كل الملفات بضغطة.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <div class="row"><span class="grow">WEAPONS_PLAYER.rpf</span><span class="tag ok">جاهز للتركيب</span></div>
+      <canvas class="wave" id="wave" aria-label="تمثيل مرئي لموجة صوت"></canvas>
+      <div class="mono">C:\Program Files\Rockstar Games\Grand Theft Auto V Legacy\x64\audio\sfx</div>
+    </div>
+  </div></section>
+
+  <section id="start"><div class="wrap">
+    <span class="kicker">البدء</span>
+    <h2>جاهز في ثلاث خطوات</h2>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h3>ثبّت البرنامج</h3><p>حمّل الملف وشغّله واتبع خطوات التثبيت.</p></div>
+      <div class="step"><div class="n">2</div><h3>سجّل الدخول</h3><p>بحساب ديسكورد، فتظهر لك محتويات اشتراكك مباشرة.</p></div>
+      <div class="step"><div class="n">3</div><h3>اختر وثبّت</h3><p>حدّد مسار FiveM من الإعدادات، ثم ثبّت ما تريد بضغطة.</p></div>
+    </div>
+    <div class="cta" style="justify-content:flex-start;margin-top:44px"><a class="btn" href="https://github.com/Ca1-Store/ca-graphics-app/releases/download/v2.0.0/Ca-App-Setup-2.0.0.exe" rel="noopener"><svg><use href="#i-dl"/></svg>تحميل Ca App</a></div>
+  </div></section>
+
+  <section id="security" style="padding-top:0"><div class="wrap">
+    <div class="sec">
+      <div>
+        <span class="kicker">الأمان</span>
+        <h2>مبني على الحماية من الأساس</h2>
+        <p class="sub">كل ملف تثبّته يمر بفحوص قبل أن يلمس لعبتك.</p>
+      </div>
+      <ul>
+        <li><svg><use href="#i-key"/></svg><div><b>التحقق من البصمة</b><span>يقارن البرنامج بصمة SHA-256 للملف المحمّل، ويلغي التثبيت إن اختلفت.</span></div></li>
+        <li><svg><use href="#i-lock"/></svg><div><b>روابط محمية</b><span>روابط التحميل لا تُعطى إلا بعد تسجيل الدخول والتحقق من اشتراكك.</span></div></li>
+        <li><svg><use href="#i-shield"/></svg><div><b>فحص الأرشيف والمسارات</b><span>يمنع الملفات ذات المسارات الخطرة ويقبل أنواع الملفات المعتمدة فقط.</span></div></li>
+        <li><svg><use href="#i-undo"/></svg><div><b>نسخ احتياطية</b><span>جرافيكسك وملفات الصوت الأصلية تُحفظ قبل أي استبدال.</span></div></li>
+      </ul>
+    </div>
+  </div></section>
+
+  <section id="faq" style="padding-top:20px"><div class="wrap">
+    <div style="text-align:center"><span class="kicker">الأسئلة الشائعة</span><h2>إجابات سريعة</h2></div>
+    <div class="faq">
+      <details open><summary>ظهرت لي رسالة Windows protected your PC، هل هذا طبيعي؟</summary><p>نعم. تظهر لأن البرنامج جديد وغير موقّع بشهادة مدفوعة. اضغط «More info» ثم «Run anyway» لإكمال التثبيت.</p></details>
+      <details><summary>هل أحتاج اشتراكاً لاستخدام البرنامج؟</summary><p>تسجّل الدخول بحساب ديسكورد، وما يظهر لك من باكات ومودات وساوندات يعتمد على نسختك (CA-1 إلى CA-5).</p></details>
+      <details><summary>لماذا يطلب تركيب الساوندات صلاحيات المسؤول؟</summary><p>لأن ملفات اللعبة غالباً في Program Files. إن ظهر خطأ صلاحيات، شغّل البرنامج بزر الفأرة الأيمن ثم «تشغيل كمسؤول». وأغلق GTA V وFiveM أثناء التركيب.</p></details>
+      <details><summary>هل يمكنني الرجوع لملفاتي الأصلية؟</summary><p>نعم. يحتفظ البرنامج بنسخة من الملف الأصلي قبل أول استبدال، وتستطيع استرجاع ملف واحد أو الكل من صفحة الساوندات.</p></details>
+      <details><summary>كيف يتحدث البرنامج؟</summary><p>يتحقق عند التشغيل من وجود إصدار جديد ويحدّث نفسه تلقائياً، وتصلك تنبيهات بالمودات الجديدة داخل البرنامج.</p></details>
+    </div>
+  </div></section>
+
+  <section style="padding-top:0"><div class="wrap">
+    <div class="final">
+      <h2 class="sil">ابدأ الآن</h2>
+      <p class="sub" style="margin-inline:auto">حمّل Ca App وثبّت أول مود خلال دقائق.</p>
+      <div class="cta"><a class="btn" href="https://github.com/Ca1-Store/ca-graphics-app/releases/download/v2.0.0/Ca-App-Setup-2.0.0.exe" rel="noopener"><svg><use href="#i-dl"/></svg>تحميل للويندوز</a></div>
+      <div class="file"><span>Ca-App-Setup-2.0.0.exe</span><span>Windows 10 / 11 · 64-bit</span></div>
+    </div>
+  </div></section>
+</main>
+
+<footer><div class="wrap"><span>© CA Store</span><span>Ca App v2.0.0</span></div></footer>
+
+<script>
+(function () {
+  var nav = document.getElementById("nav");
+  function onScroll() { nav.classList.toggle("s", window.scrollY > 8); }
+  window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+
+  var tabs = document.querySelectorAll(".tabs button");
+  tabs.forEach(function (b) {
+    b.addEventListener("click", function () {
+      tabs.forEach(function (x) { x.setAttribute("aria-selected", x === b ? "true" : "false"); });
+      document.querySelectorAll(".screen").forEach(function (s) { s.classList.toggle("on", s.id === b.dataset.s); });
+    });
+  });
+
+  var cv = document.getElementById("wave"), ctx = cv.getContext("2d");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches, t = 0;
+  function css(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+  function draw() {
+    var r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+    if (cv.width !== Math.round(r.width * d)) { cv.width = Math.round(r.width * d); cv.height = Math.round(r.height * d); }
+    ctx.setTransform(d, 0, 0, d, 0, 0); ctx.clearRect(0, 0, r.width, r.height);
+    var n = Math.floor(r.width / 7), mid = r.height / 2, c1 = css("--silver-1"), c2 = css("--line-2");
+    for (var i = 0; i < n; i++) {
+      var x = i * 7 + 2, p = i / n;
+      var env = Math.sin(p * Math.PI) * (0.55 + 0.45 * Math.sin(p * 23 + t)) * (0.6 + 0.4 * Math.sin(p * 9 - t * 1.3));
+      var h = Math.max(3, Math.abs(env) * (r.height - 14));
+      ctx.fillStyle = (Math.sin(p * 6 - t * .8) > .1) ? c1 : c2;
+      ctx.fillRect(x, mid - h / 2, 3.5, h);
+    }
+    if (!reduce) { t += 0.035; requestAnimationFrame(draw); }
+  }
+  draw();
+  window.addEventListener("resize", function () { if (reduce) draw(); });
+})();
+</script>
+
+</body></html>
